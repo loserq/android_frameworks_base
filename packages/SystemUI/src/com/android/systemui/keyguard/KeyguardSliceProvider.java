@@ -66,6 +66,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.Calendar;
 
 import javax.inject.Inject;
 
@@ -141,6 +142,7 @@ public class KeyguardSliceProvider extends SliceProvider implements
     public KeyguardBypassController mKeyguardBypassController;
     private CharSequence mMediaTitle;
     private CharSequence mMediaArtist;
+    private int keyguard_weekday;
     protected boolean mDozing;
     private int mStatusBarState;
     private boolean mMediaIsVisible;
@@ -209,7 +211,14 @@ public class KeyguardSliceProvider extends SliceProvider implements
             if (needsMediaLocked()) {
                 addMediaLocked(builder);
             } else {
-                builder.addRow(new RowBuilder(mDateUri).setTitle(mLastText));
+		    if(keyguard_weekday == 0){
+		    	updateClockLocked();
+		    }
+		IconCompat weekIcon = IconCompat.createWithResource(getContext(),
+                keyguard_weekday);
+                builder.addRow(new RowBuilder(mDateUri)
+				.setTitle(mLastText)
+				.addEndItem(weekIcon, ListBuilder.ICON_IMAGE));
             }
             addNextAlarmLocked(builder);
             addZenModeLocked(builder);
@@ -402,9 +411,26 @@ public class KeyguardSliceProvider extends SliceProvider implements
     }
 
     protected void updateClockLocked() {
+	final Calendar mCalendar;
         final String text = getFormattedDateLocked();
+	mCalendar = Calendar.getInstance();
         if (!text.equals(mLastText)) {
             mLastText = text;
+	    if(mCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+	       keyguard_weekday = R.drawable.keyguard_Sunday; 
+	    }else if(mCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
+               keyguard_weekday = R.drawable.keyguard_Monday;
+            }else if(mCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY){
+               keyguard_weekday = R.drawable.keyguard_Tuesday;
+            }else if(mCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY){
+               keyguard_weekday = R.drawable.keyguard_Wednesday;
+            }else if(mCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY){
+               keyguard_weekday = R.drawable.keyguard_Thursday;
+            }else if(mCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY){
+               keyguard_weekday = R.drawable.keyguard_Friday;
+            }else if(mCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+               keyguard_weekday = R.drawable.keyguard_Saturday;
+            }
             notifyChange();
         }
     }

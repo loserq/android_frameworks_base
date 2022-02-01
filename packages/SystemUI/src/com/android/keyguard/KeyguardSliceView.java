@@ -235,7 +235,7 @@ public class KeyguardSliceView extends LinearLayout {
                     iconDrawable.setBounds(0, 0, Math.max(width, 1), iconSize);
                 }
             }
-            button.setCompoundDrawablesRelative(iconDrawable, null, null, null);
+	    button.setCompoundDrawablesRelative(iconDrawable, null, null, null);
             button.setOnClickListener(mOnClickListener);
             button.setClickable(pendingIntent != null);
         }
@@ -539,7 +539,7 @@ public class KeyguardSliceView extends LinearLayout {
             final int color = getCurrentTextColor();
             for (Drawable drawable : getCompoundDrawables()) {
                 if (drawable != null) {
-                    drawable.setTint(color);
+                   // drawable.setTint(color);
                 }
             }
         }
